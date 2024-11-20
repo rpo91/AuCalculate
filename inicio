@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Compra y Venta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .calculator {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        .calculator h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .result {
+            font-size: 18px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Calculadora de Compra -->
+    <div class="calculator">
+        <h2>Calculadora de Compra</h2>
+        <div class="form-group">
+            <label for="grams">Gramos Brutos:</label>
+            <input type="number" id="grams" placeholder="Ingrese los gramos brutos" oninput="calculatePurchase()">
+        </div>
+        <div class="form-group">
+            <label for="purity">Porcentaje de Pureza (%):</label>
+            <input type="number" id="purity" placeholder="Ingrese el porcentaje de pureza" oninput="calculatePurchase()">
+        </div>
+        <div class="form-group">
+            <label for="fineGrams">Gramos Finos:</label>
+            <input type="text" id="fineGrams" disabled placeholder="Los gramos finos se calculan automáticamente">
+        </div>
+        <div class="form-group">
+            <label for="price">Precio de Compra ($ por gramo fino):</label>
+            <input type="number" id="price" placeholder="Ingrese el precio por gramo fino" oninput="calculatePurchase()">
+        </div>
+        <div class="result" id="purchaseResult"></div>
+    </div>
+
+    <!-- Calculadora de Venta -->
+    <div class="calculator">
+        <h2>Calculadora de Venta</h2>
+        <div class="form-group">
+            <label for="sellGrams">Gramos Brutos:</label>
+            <input type="number" id="sellGrams" placeholder="Ingrese los gramos brutos" oninput="calculateSale()">
+        </div>
+        <div class="form-group">
+            <label for="sellPurity">Porcentaje de Pureza (%):</label>
+            <input type="number" id="sellPurity" placeholder="Ingrese el porcentaje de pureza" oninput="calculateSale()">
+        </div>
+        <div class="form-group">
+            <label for="sellFineGrams">Gramos Finos:</label>
+            <input type="text" id="sellFineGrams" disabled placeholder="Los gramos finos se calculan automáticamente">
+        </div>
+        <div class="form-group">
+            <label for="sellPrice">Precio de Venta ($ por gramo fino):</label>
+            <input type="number" id="sellPrice" placeholder="Ingrese el precio de venta por gramo fino" oninput="calculateSale()">
+        </div>
+        <div class="result" id="saleResult"></div>
+    </div>
+
+    <!-- Utilidad -->
+    <div class="calculator">
+        <h2>Utilidad</h2>
+        <div class="result" id="profitResult"></div>
+    </div>
+
+    <script>
+        let purchaseTotal = 0;
+        let saleTotal = 0;
+
+        // Calculadora de Compra
+        function calculatePurchase() {
+            const grams = parseFloat(document.getElementById('grams').value);
+            const purity = parseFloat(document.getElementById('purity').value);
+            const price = parseFloat(document.getElementById('price').value);
+
+            // Verificar que todos los campos estén completos
+            if (isNaN(grams) || isNaN(purity) || isNaN(price)) {
+                document.getElementById('purchaseResult').textContent = "Por favor, complete todos los campos correctamente.";
+                return;
+            }
+
+            // Calcular gramos finos
+            const fineGrams = grams * (purity / 100);
+            document.getElementById('fineGrams').value = fineGrams.toFixed(2);
+
+            // Calcular el precio total de compra
+            let totalPrice = fineGrams * price;
+
+            // Redondear el precio total hacia arriba al siguiente múltiplo de 1.000
+            totalPrice = Math.ceil(totalPrice / 1000) * 1000;
+
+            // Guardar el total de compra
+            purchaseTotal = totalPrice;
+
+            // Formatear el precio total de compra
+            const formattedPrice = totalPrice.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            });
+
+            // Mostrar el precio total de compra
+            document.getElementById('purchaseResult').innerHTML = `
+                Precio Total de Compra: <strong>${formattedPrice}</strong>
+            `;
+            calculateProfit();  // Calcular la utilidad
+        }
+
+        // Calculadora de Venta
+        function calculateSale() {
+            const grams = parseFloat(document.getElementById('sellGrams').value);
+            const purity = parseFloat(document.getElementById('sellPurity').value);
+            const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+
+            // Verificar que todos los campos estén completos
+            if (isNaN(grams) || isNaN(purity) || isNaN(sellPrice)) {
+                document.getElementById('saleResult').textContent = "Por favor, complete todos los campos correctamente.";
+                return;
+            }
+
+            // Calcular gramos finos
+            const fineGrams = grams * (purity / 100);
+            document.getElementById('sellFineGrams').value = fineGrams.toFixed(2);
+
+            // Calcular el precio total de venta
+            let totalSale = fineGrams * sellPrice;
+
+            // Redondear el precio total de venta hacia arriba al siguiente múltiplo de 1.000
+            totalSale = Math.ceil(totalSale / 1000) * 1000;
+
+            // Guardar el total de venta
+            saleTotal = totalSale;
+
+            // Formatear el precio total de venta
+            const formattedSale = totalSale.toLocaleString('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            });
+
+            // Mostrar el precio total de venta
+            document.getElementById('saleResult').innerHTML = `
+                Precio Total de Venta: <strong>${formattedSale}</strong>
+            `;
+            calculateProfit();  // Calcular la utilidad
+        }
+
+        // Calcular Utilidad
+        function calculateProfit() {
+            if (purchaseTotal > 0 && saleTotal > 0) {
+                const profit = saleTotal - purchaseTotal;
+
+                // Formatear la utilidad
+                const formattedProfit = profit.toLocaleString('es-CO', {
+                    style: 'currency',
+                    currency: 'COP'
+                });
+
+                // Mostrar la utilidad
+                document.getElementById('profitResult').innerHTML = `
+                    Utilidad: <strong>${formattedProfit}</strong>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
