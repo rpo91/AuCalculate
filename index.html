@@ -17,7 +17,7 @@
         }
 
         .calculator {
-            max-width: 400px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #fff;
@@ -32,23 +32,39 @@
         }
 
         .form-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
             margin-bottom: 15px;
         }
 
         label {
-            width: 40%;
-            text-align: right;
+            margin-right: 10px;
+            font-weight: bold;
         }
 
-        input[type="number"], input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
+        select, input {
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
             border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        table tfoot {
+            font-weight: bold;
+            background-color: #f4f4f9;
         }
 
         .result {
@@ -84,83 +100,142 @@
     </style>
 </head>
 <body>
-    <!-- Calculadora de Compra -->
     <div class="calculator">
         <h2>Calculadora de Compra</h2>
         <div class="form-group">
-            <label for="grams">Gramos Brutos:</label>
-            <input type="number" id="grams" placeholder="Ingrese los gramos brutos" oninput="calculatePurchase()">
+            <label for="purchaseCount">Cantidad de barras a comprar:</label>
+            <select id="purchaseCount" onchange="generateTable('purchase')">
+                <option value="0">Seleccionar...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
-        <div class="form-group">
-            <label for="purity">Porcentaje de Pureza (%):</label>
-            <input type="number" id="purity" placeholder="Ingrese el porcentaje de pureza" oninput="calculatePurchase()">
-        </div>
-        <div class="form-group">
-            <label for="fineGrams">Gramos Finos:</label>
-            <input type="text" id="fineGrams" disabled placeholder="Los gramos finos se calculan automáticamente">
-        </div>
-        <div class="form-group">
-            <label for="price">Precio de Compra ($ por gramo fino):</label>
-            <input type="number" id="price" placeholder="Ingrese el precio por gramo fino" oninput="calculatePurchase()">
-        </div>
-        <div class="result" id="purchaseResult"></div>
+        <table id="purchaseTable"></table>
     </div>
 
-    <!-- Calculadora de Venta -->
     <div class="calculator">
         <h2>Calculadora de Venta</h2>
         <div class="form-group">
-            <label for="sellGrams">Gramos Brutos:</label>
-            <input type="number" id="sellGrams" placeholder="Ingrese los gramos brutos" oninput="calculateSale()">
+            <label for="saleCount">Cantidad de barras a vender:</label>
+            <select id="saleCount" onchange="generateTable('sale')">
+                <option value="0">Seleccionar...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
-        <div class="form-group">
-            <label for="sellPurity">Porcentaje de Pureza (%):</label>
-            <input type="number" id="sellPurity" placeholder="Ingrese el porcentaje de pureza" oninput="calculateSale()">
-        </div>
-        <div class="form-group">
-            <label for="sellFineGrams">Gramos Finos:</label>
-            <input type="text" id="sellFineGrams" disabled placeholder="Los gramos finos se calculan automáticamente">
-        </div>
-        <div class="form-group">
-            <label for="sellPrice">Precio de Venta ($ por gramo fino):</label>
-            <input type="number" id="sellPrice" placeholder="Ingrese el precio de venta por gramo fino" oninput="calculateSale()">
-        </div>
-        <div class="result" id="saleResult"></div>
+        <table id="saleTable"></table>
     </div>
 
-    <!-- Utilidad -->
     <div class="calculator">
         <h2>Utilidad</h2>
-        <div class="result" id="profitResult"></div>
+        <div class="result" id="profitResult">Utilidad: $0.00</div>
     </div>
 
-    <!-- Gastos -->
-    <div class="calculator">
-        <h2>Gastos</h2>
-        <div class="form-group">
-            <label for="costFoundry">Gastos de Fundición ($):</label>
-            <input type="number" id="costFoundry" placeholder="Ingrese los gastos de fundición" oninput="calculateNetProfit()">
-        </div>
-        <div class="form-group">
-            <label for="costAnalysis">Gastos de Análisis ($):</label>
-            <input type="number" id="costAnalysis" placeholder="Ingrese los gastos de análisis" oninput="calculateNetProfit()">
-        </div>
-        <div class="form-group">
-            <label for="costTransport">Gastos de Transporte ($):</label>
-            <input type="number" id="costTransport" placeholder="Ingrese los gastos de transporte" oninput="calculateNetProfit()">
-        </div>
-        <div class="form-group">
-            <label for="costCommissions">Comisiones ($):</label>
-            <input type="number" id="costCommissions" placeholder="Ingrese las comisiones" oninput="calculateNetProfit()">
-        </div>
-        <div class="result" id="netProfitResult"></div>
-    </div>
-
-    <!-- Botón Limpiar -->
     <button class="clear-btn" onclick="clearFields()">Limpiar Campos</button>
 
     <script>
-        // Lógica de cálculo permanece igual, incluida en tu código original.
+        const currencyFormatter = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 2
+        });
+
+        function generateTable(type) {
+            const count = parseInt(document.getElementById(`${type}Count`).value);
+            const table = document.getElementById(`${type}Table`);
+            table.innerHTML = '';
+
+            if (count > 0) {
+                table.innerHTML = `
+                    <tr>
+                        <th>#</th>
+                        <th>Gramos Brutos</th>
+                        <th>Pureza (%)</th>
+                        <th>Gramos Finos</th>
+                        <th>Precio ($/gramo)</th>
+                    </tr>
+                `;
+
+                for (let i = 1; i <= count; i++) {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${i}</td>
+                            <td><input type="number" id="${type}Grams${i}" placeholder="Gramos" min="0" oninput="updateTotals('${type}')"></td>
+                            <td><input type="number" id="${type}Purity${i}" placeholder="Pureza" min="0" max="100" oninput="updateTotals('${type}')"></td>
+                            <td id="${type}FineGrams${i}">0</td>
+                            <td><input type="number" id="${type}Price${i}" placeholder="Precio" min="0" oninput="updateTotals('${type}')"></td>
+                        </tr>
+                    `;
+                }
+
+                table.innerHTML += `
+                    <tfoot>
+                        <tr>
+                            <td colspan="1">Totales:</td>
+                            <td id="${type}TotalGrams">0</td>
+                            <td id="${type}AveragePurity">0%</td>
+                            <td id="${type}TotalFineGrams">0</td>
+                            <td id="${type}TotalValue">$0.00</td>
+                        </tr>
+                    </tfoot>
+                `;
+            }
+
+            updateTotals(type);
+        }
+
+        function updateTotals(type) {
+            const count = parseInt(document.getElementById(`${type}Count`).value);
+            let totalGrams = 0;
+            let totalFineGrams = 0;
+            let totalValue = 0;
+            let totalPurity = 0;
+
+            for (let i = 1; i <= count; i++) {
+                const grams = parseFloat(document.getElementById(`${type}Grams${i}`)?.value) || 0;
+                const purity = parseFloat(document.getElementById(`${type}Purity${i}`)?.value) || 0;
+                const price = parseFloat(document.getElementById(`${type}Price${i}`)?.value) || 0;
+
+                const fineGrams = grams * (purity / 100);
+                totalGrams += grams;
+                totalFineGrams += fineGrams;
+                totalValue += grams * price;
+                totalPurity += purity * grams;
+
+                document.getElementById(`${type}FineGrams${i}`).innerText = fineGrams.toFixed(2);
+            }
+
+            const averagePurity = totalGrams > 0 ? (totalPurity / totalGrams).toFixed(2) : 0;
+
+            document.getElementById(`${type}TotalGrams`).innerText = totalGrams.toFixed(2);
+            document.getElementById(`${type}AveragePurity`).innerText = `${averagePurity}%`;
+            document.getElementById(`${type}TotalFineGrams`).innerText = totalFineGrams.toFixed(2);
+            document.getElementById(`${type}TotalValue`).innerText = currencyFormatter.format(totalValue);
+
+            calculateProfit();
+        }
+
+        function calculateProfit() {
+            const purchaseValue = parseFloat(document.getElementById('purchaseTotalValue')?.innerText.replace(/[^0-9.-]+/g, '')) || 0;
+            const saleValue = parseFloat(document.getElementById('saleTotalValue')?.innerText.replace(/[^0-9.-]+/g, '')) || 0;
+            const profit = saleValue - purchaseValue;
+
+            document.getElementById('profitResult').innerText = `Utilidad: ${currencyFormatter.format(profit)}`;
+        }
+
+        function clearFields() {
+            ['purchase', 'sale'].forEach(type => {
+                document.getElementById(`${type}Count`).value = '0';
+                document.getElementById(`${type}Table`).innerHTML = '';
+            });
+            document.getElementById('profitResult').innerText = 'Utilidad: $0.00';
+        }
     </script>
 </body>
 </html>
