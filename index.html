@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
     <title>Calculadora de Compra y Venta</title>
     <style>
         * {
@@ -14,7 +14,8 @@
             margin: 20px;
             padding: 20px;
             background-color: #f4f4f9;
-            color: black;  /* Fuente en color negro */
+            color: black;
+            font-size: 16px; /* Fuente más pequeña por defecto */
         }
 
         .calculator {
@@ -31,6 +32,7 @@
         .calculator h2 {
             text-align: center;
             margin-bottom: 20px;
+            font-size: 1.2em; /* Título más pequeño */
         }
 
         .form-group {
@@ -40,31 +42,32 @@
         label {
             margin-right: 10px;
             font-weight: bold;
+            font-size: 14px; /* Etiquetas más pequeñas */
         }
 
         select, input {
-            padding: 10px;  /* Aumentado para mejor visibilidad en móviles */
+            padding: 8px;  /* Espaciado ajustado */
             font-size: 14px;
-            width: 100%;  /* Se ajustan al 100% del contenedor */
-            margin-bottom: 10px;  /* Margen para separar campos */
+            width: 100%;  /* Ajustado a todo el contenedor */
+            margin-bottom: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
-            table-layout: fixed;  /* Asegura que las celdas no se estiren demasiado */
+            table-layout: fixed;
         }
 
         table th, table td {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
-            word-wrap: break-word;  /* Evita desbordes de contenido */
+            word-wrap: break-word;
         }
 
         table th {
-            background-color: #B8860B;  /* Color dorado oscuro */
+            background-color: #B8860B;
             color: white;
         }
 
@@ -74,7 +77,7 @@
         }
 
         .result {
-            font-size: 18px;
+            font-size: 16px;
             margin-top: 15px;
             text-align: center;
             font-weight: bold;
@@ -82,8 +85,8 @@
 
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #B8860B;  /* Color dorado oscuro para el botón */
+            padding: 12px;
+            background-color: #B8860B;
             color: white;
             border: none;
             border-radius: 4px;
@@ -92,16 +95,75 @@
         }
 
         button:hover {
-            background-color: #8B5A2B;  /* Color dorado más oscuro cuando se pasa el mouse */
+            background-color: #8B5A2B;
         }
 
         .clear-btn {
-            background-color: #B8860B;  /* Color dorado oscuro para el botón de limpiar */
+            background-color: #B8860B;
             margin-top: 20px;
         }
 
         .clear-btn:hover {
-            background-color: #8B5A2B;  /* Color dorado más oscuro al pasar el mouse */
+            background-color: #8B5A2B;
+        }
+
+        /* Media Queries para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px; /* Reducir tamaño de texto en pantallas pequeñas */
+            }
+
+            .calculator {
+                padding: 15px; /* Ajustar el padding de los contenedores */
+            }
+
+            .calculator h2 {
+                font-size: 1em; /* Reducir el tamaño del título */
+            }
+
+            label {
+                font-size: 12px; /* Reducir el tamaño de las etiquetas */
+            }
+
+            select, input {
+                padding: 6px; /* Reducir el padding de inputs y selects */
+                font-size: 12px; /* Reducir el tamaño de la fuente */
+            }
+
+            table th, table td {
+                font-size: 12px; /* Reducir el tamaño de la fuente en la tabla */
+            }
+
+            .result {
+                font-size: 14px; /* Reducir el tamaño de la fuente en el resultado */
+            }
+
+            button {
+                padding: 10px; /* Ajustar el padding del botón */
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 12px; /* Reducir aún más el tamaño del texto en pantallas pequeñas */
+            }
+
+            select, input {
+                font-size: 10px; /* Reducir aún más el tamaño de la fuente */
+            }
+
+            table th, table td {
+                font-size: 10px; /* Ajustar tamaño de texto de la tabla */
+            }
+
+            button {
+                font-size: 14px; /* Ajustar el tamaño de texto en el botón */
+                padding: 8px; /* Ajustar el tamaño del botón */
+            }
+
+            .clear-btn {
+                font-size: 14px; /* Ajustar el tamaño de texto en el botón de limpiar */
+            }
         }
     </style>
 </head>
