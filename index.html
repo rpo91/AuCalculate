@@ -15,7 +15,23 @@
             padding: 20px;
             background-color: #f4f4f9;
             color: black;
-            font-size: 16px; /* Fuente más pequeña por defecto */
+            font-size: 16px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #B8860B;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .logo span {
+            color: #8B5A2B;
         }
 
         .calculator {
@@ -32,7 +48,7 @@
         .calculator h2 {
             text-align: center;
             margin-bottom: 20px;
-            font-size: 1.2em; /* Título más pequeño */
+            font-size: 1.2em;
         }
 
         .form-group {
@@ -42,13 +58,13 @@
         label {
             margin-right: 10px;
             font-weight: bold;
-            font-size: 14px; /* Etiquetas más pequeñas */
+            font-size: 14px;
         }
 
         select, input {
-            padding: 8px;  /* Espaciado ajustado */
+            padding: 8px;
             font-size: 14px;
-            width: 100%;  /* Ajustado a todo el contenedor */
+            width: 100%;
             margin-bottom: 10px;
         }
 
@@ -107,67 +123,72 @@
             background-color: #8B5A2B;
         }
 
-        /* Media Queries para pantallas más pequeñas */
         @media (max-width: 768px) {
             body {
-                font-size: 14px; /* Reducir tamaño de texto en pantallas pequeñas */
+                font-size: 14px;
             }
 
             .calculator {
-                padding: 15px; /* Ajustar el padding de los contenedores */
+                padding: 15px;
             }
 
             .calculator h2 {
-                font-size: 1em; /* Reducir el tamaño del título */
+                font-size: 1em;
             }
 
             label {
-                font-size: 12px; /* Reducir el tamaño de las etiquetas */
+                font-size: 12px;
             }
 
             select, input {
-                padding: 6px; /* Reducir el padding de inputs y selects */
-                font-size: 12px; /* Reducir el tamaño de la fuente */
+                padding: 6px;
+                font-size: 12px;
             }
 
             table th, table td {
-                font-size: 12px; /* Reducir el tamaño de la fuente en la tabla */
+                font-size: 12px;
             }
 
             .result {
-                font-size: 14px; /* Reducir el tamaño de la fuente en el resultado */
+                font-size: 14px;
             }
 
             button {
-                padding: 10px; /* Ajustar el padding del botón */
+                padding: 10px;
             }
         }
 
         @media (max-width: 480px) {
             body {
-                font-size: 12px; /* Reducir aún más el tamaño del texto en pantallas pequeñas */
+                font-size: 12px;
             }
 
             select, input {
-                font-size: 10px; /* Reducir aún más el tamaño de la fuente */
+                font-size: 10px;
             }
 
             table th, table td {
-                font-size: 10px; /* Ajustar tamaño de texto de la tabla */
+                font-size: 10px;
             }
 
             button {
-                font-size: 14px; /* Ajustar el tamaño de texto en el botón */
-                padding: 8px; /* Ajustar el tamaño del botón */
+                font-size: 14px;
+                padding: 8px;
             }
 
             .clear-btn {
-                font-size: 14px; /* Ajustar el tamaño de texto en el botón de limpiar */
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <div class="logo">
+            Calcul<span>Au</span>
+        </div>
+    </div>
+
     <div class="calculator">
         <h2>Calculadora de Compra</h2>
         <div class="form-group">
