@@ -226,7 +226,7 @@
                         <th>Gramos Brutos</th>
                         <th>Pureza (%)</th>
                         <th>Gramos Finos</th>
-                        <th>Precio ($/gramo)</th>
+                        <th>Precio ($/gramo fino)</th>
                     </tr>
                 `;
 
@@ -270,21 +270,21 @@
                 const purity = parseFloat(document.getElementById(`${type}Purity${i}`)?.value) || 0;
                 const price = parseFloat(document.getElementById(`${type}Price${i}`)?.value) || 0;
 
-                const fineGrams = grams * (purity / 100);
+                const fineGrams = round(grams * (purity / 100), 2);
+                document.getElementById(`${type}FineGrams${i}`).innerText = fineGrams;
+
                 totalGrams += grams;
                 totalFineGrams += fineGrams;
-                totalValue += grams * price;
+                totalValue += fineGrams * price;
                 totalPurity += purity * grams;
-
-                document.getElementById(`${type}FineGrams${i}`).innerText = fineGrams.toFixed(2);
             }
 
-            const averagePurity = totalGrams > 0 ? (totalPurity / totalGrams).toFixed(2) : 0;
+            const averagePurity = totalGrams > 0 ? (totalPurity / totalGrams) : 0;
 
-            document.getElementById(`${type}TotalGrams`).innerText = totalGrams.toFixed(2);
-            document.getElementById(`${type}AveragePurity`).innerText = `${averagePurity}%`;
-            document.getElementById(`${type}TotalFineGrams`).innerText = totalFineGrams.toFixed(2);
-            document.getElementById(`${type}TotalValue`).innerText = currencyFormatter.format(totalValue);
+            document.getElementById(`${type}TotalGrams`).innerText = round(totalGrams, 2);
+            document.getElementById(`${type}AveragePurity`).innerText = `${round(averagePurity, 2)}%`;
+            document.getElementById(`${type}TotalFineGrams`).innerText = round(totalFineGrams, 2);
+            document.getElementById(`${type}TotalValue`).innerText = currencyFormatter.format(round(totalValue, 2));
 
             calculateProfit();
         }
@@ -297,11 +297,15 @@
             document.getElementById('profitResult').innerText = `Utilidad: ${currencyFormatter.format(profit)}`;
         }
 
+        function round(value, decimals) {
+            return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+        }
+
         function clearFields() {
-            ['purchase', 'sale'].forEach(type => {
-                document.getElementById(`${type}Count`).value = '0';
-                document.getElementById(`${type}Table`).innerHTML = '';
-            });
+            document.getElementById('purchaseCount').value = 0;
+            document.getElementById('saleCount').value = 0;
+            document.getElementById('purchaseTable').innerHTML = '';
+            document.getElementById('saleTable').innerHTML = '';
             document.getElementById('profitResult').innerText = 'Utilidad: $0.00';
         }
     </script>
